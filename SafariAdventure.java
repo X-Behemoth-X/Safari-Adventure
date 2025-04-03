@@ -1,0 +1,83 @@
+import java.util.Random;
+import.util.Scanner;
+
+public class SafariAdventure{
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+        int totalPoints = 0;
+        String{} areas = {"Jungle", "River", "Desert", "Mountains"};
+        String[] events = {"Ypu found an old campite (no points)", "You gathered fresh water (+20 points)","found edible berries (+15 points)", "spotted a bird (no points)",
+                "You found a hidden food stash (+25 points)", "discovered ancient ruins (+20 points)", "encountered a lion (danger!)",
+                "hit by a sandstorm (-5 points)", "A heavy strom begins (-10 points)", "fished a rare species (+25 points)",
+                "saw a beautiful sunrise (no points)", "crocodile attack (danger!)"};
+
+        System.out.println("\n Welcometo Safari Adventure\n");
+
+        for (int day = 1; day <= 5; day++) {
+            system,out.printn("Day " + day + ":");
+            String choice;
+
+            do {
+                System.out.println("Where would you like to go? (Jungle, Desert, River, Mountains): ");
+                choice = scanner.nextLine().trim();
+            } wile (!isValidArea(choice, areas));
+
+            System.out.println("You chose: " + choice);
+            System.out.println("Exploring " + choice + "...\n");
+
+            int eventsToday = 0;
+            while (eventsToday < 3) {
+                String event = events[random.nextInt(events.length)];
+                System.out.println("Event " + (eventsToday + 1) + ":" + event);
+
+                if (event.contains("bird") || event.contains("sunrise")) {
+                   System.out.println("(Too small to track. Moving on.)\n")
+                   eventsToday++;
+                   continue;
+                }
+
+                if (event.contains("lion") || event.contains("crocodile")) {
+                    System.out.print("Type 'run' to escape: ");
+                    String action = scanner.nextLine().trim();
+                    if (action.equalsIgnoreCase("run")) {
+                        System.out.println("You escaped safely, ending the day early.\n");
+                        break;
+                    }
+                }
+
+                totalPoints += extractPoints(event);
+                eventsToday++;
+            }
+            System.out.println(" Day summary: " + totalPoints + " points earned so far.");
+            System.out.println("-----------------------------------\n");
+        }
+        System.out.println(" Safari Finished! You collected " + totalPoints + "points!");
+if (totalPoints >= 100) {
+            System.out.println("You survived and completed the adventure!");
+        } else {
+            System.out.println("You didn't collect enough resources to survive. Try again!");
+        }
+        
+        scanner.close();
+    }
+    
+    public static boolean isValidArea(String choice, String[] areas) {
+        for (String area : areas) {
+            if (area.equalsIgnoreCase(choice)) {
+                return true;
+            }
+        }
+        System.out.println("Invalid area. Please choose again.\n");
+        return false;
+    }
+    
+    public static int extractPoints(String event) {
+        if (event.contains("+")) {
+            return Integer.parseInt(event.replaceAll("[^0-9]", ""));
+        } else if (event.contains("-")) {
+            return -Integer.parseInt(event.replaceAll("[^0-9]", ""));
+        }
+        return 0;
+    }
+}
